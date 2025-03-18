@@ -1,2 +1,6 @@
+org/example/CustomTheme.class
 org/example/Main.class
+Functions/seeInventary.class
+org/example/MySQLConnection.class
 org/example/JLineCli.class
+org/example/DatabaseConfig.class
