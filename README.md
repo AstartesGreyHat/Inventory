@@ -63,6 +63,71 @@ El sistema se compone de los siguientes microservicios:
 
 ---
 
+## 📖 Documentación de los Microservicios
+A continuación, se describen cada uno de los microservicios, sus parámetros y su uso individual:
+
+### **1. Microservicio de Gestión de Acceso (Java + Spring Boot)**
+**Descripción:**
+Este servicio maneja la autenticación y validación de acceso de personal.
+
+**Ejecución:**
+```bash
+cd java-service
+./gradlew bootRun
+```
+
+**Parámetros de configuración:**
+- `server.port` → Define el puerto en el que se ejecuta el servicio (por defecto: `8080`).
+- `database.url` → URL de conexión a SQL Server.
+
+**Endpoints principales:**
+| Método | Endpoint | Descripción |
+|--------|---------|-------------|
+| gRPC   | `/validateAccess` | Valida el acceso de un usuario |
+| gRPC   | `/getUserInfo` | Obtiene información de un usuario registrado |
+
+---
+
+### **2. Microservicio de Procesamiento de Imágenes (Python + OpenCV)**
+**Descripción:**
+Este servicio captura imágenes de la cámara y realiza reconocimiento facial.
+
+**Ejecución:**
+```bash
+cd python-service
+pip install -r requirements.txt
+python app.py --camera 0 --host 0.0.0.0 --port 5001
+```
+
+**Parámetros:**
+- `--camera` → Índice de la cámara a utilizar (por defecto `0`).
+- `--host` → Dirección IP en la que correrá el servicio.
+- `--port` → Puerto en el que se ejecutará (por defecto `5001`).
+
+**Endpoints gRPC:**
+| Método | Endpoint | Descripción |
+|--------|---------|-------------|
+| gRPC   | `/processImage` | Procesa una imagen para reconocimiento facial |
+| gRPC   | `/getCameraStatus` | Devuelve el estado actual de la cámara |
+
+---
+
+### **3. Microservicio de Eventos y Notificaciones (Apache Kafka)**
+**Descripción:**
+Maneja los eventos de acceso y los publica en Kafka para ser procesados por otros sistemas.
+
+**Ejecución:**
+```bash
+bin/zookeeper-server-start.sh config/zookeeper.properties
+bin/kafka-server-start.sh config/server.properties
+```
+
+**Temas Kafka utilizados:**
+- `acceso-topic` → Publica eventos de acceso en tiempo real.
+- `notificaciones-topic` → Envia alertas y notificaciones sobre accesos no autorizados.
+
+---
+
 ## 🚀 Ejecución en Producción
 ### **Ejecutar con Docker (Próximamente)**
 Cuando el sistema esté listo para ser desplegado en **Docker**, se podrá ejecutar con:
@@ -83,15 +148,6 @@ server {
     }
 }
 ```
-
----
-
-## 🔍 📖 Endpoints Disponibles
-| Servicio | Método | Endpoint | Descripción |
-|----------|--------|---------|-------------|
-| Gestión de Acceso | gRPC | `/validateAccess` | Valida el acceso de un usuario |
-| Procesamiento de Imágenes | gRPC | `/processImage` | Procesa una imagen para reconocimiento facial |
-| Eventos y Notificaciones | Kafka | `acceso-topic` | Publica eventos de acceso |
 
 ---
 
